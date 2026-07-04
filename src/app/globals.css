@@ -4,6 +4,10 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  --font-norms: var(--font-norms);
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -152,4 +156,12 @@
   border-left: 3px solid #ccc;
   padding-left: 1rem;
   color: #666;
+}
+
+.ProseMirror img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 2rem auto;
+  border-radius: 12px;
 }

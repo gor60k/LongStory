@@ -2,7 +2,8 @@
 
 import { Editor } from "@tiptap/react";
 import { Bold, Italic, Heading1, Heading2, List, Quote } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
+import ImageButton from '@/features/editor/ui/Toolbar/ImageButton';
 
 type Props = {
 	editor: Editor | null;
@@ -76,6 +77,8 @@ export default function EditorToolbar({ editor }: Props) {
 				>
 					<Quote size={18} />
 				</button>
+
+				<ImageButton editor={editor} />
 			</div>
 	);
 }

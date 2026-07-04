@@ -5,20 +5,20 @@ import { useParams } from "next/navigation";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 
-import { getArticle, upsertArticle } from "@/lib/articles";
-import EditorContent from "@/components/editor/EditorContent";
-import EditorToolbar from "@/components/editor/EditorToolbar";
-import EditorTitle from "@/components/editor/EditorTitle";
+import { getArticle, upsertArticle } from "@/shared/lib/storage/articles";
+import EditorContent from "@/features/editor/ui/EditorContent";
+import EditorToolbar from "@/features/editor/ui/EditorToolbar";
+import EditorTitle from "@/features/editor/ui/EditorTitle";
+import { useRichEditor } from '@/hooks/useRichEditor';
 
 export default function EditArticlePage() {
 	const { id } = useParams<{ id: string }>();
 
 	const [title, setTitle] = useState("");
 
-	const editor = useEditor({
-		extensions: [StarterKit],
+	const editor = useRichEditor({
 		content: "<p>Loading...</p>",
-	});
+	})
 
 	// LOAD ARTICLE
 	useEffect(() => {

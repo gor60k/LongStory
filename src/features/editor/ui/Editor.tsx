@@ -2,24 +2,24 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from "react";
-import { useEditor } from "@tiptap/react";
 import { useMemo } from "react";
-import { upsertArticle } from "@/lib/articles";
+import { upsertArticle } from "@/shared/lib/storage/articles";
 import { useAutosave } from '@/hooks/useAutosave';
-import StarterKit from "@tiptap/starter-kit";
 
-import EditorTitle from "@/components/editor/EditorTitle";
-import EditorToolbar from "@/components/editor/EditorToolbar";
-import EditorContent from "@/components/editor/EditorContent";
+import EditorTitle from "@/features/editor/ui/EditorTitle";
+import EditorToolbar from "@/features/editor/ui/EditorToolbar";
+import EditorContent from "@/features/editor/ui/EditorContent";
+import { useRichEditor } from '@/hooks/useRichEditor';
+import DragOverlay from '@/features/editor/ui/DragOverlay';
 
 export default function Editor() {
 	const [title, setTitle] = useState("");
 	const articleId = useMemo(() => crypto.randomUUID(), []);
+	const [dragging, setDragging] = useState(false);
 
 	const [saveStatus, setSaveStatus] = useState<
 			"idle" | "saving" | "saved" | "error"
 	>("idle");
-	const isDirty = saveStatus === "idle";
 
 	const router = useRouter();
 
@@ -50,17 +50,9 @@ export default function Editor() {
 		router.push("/");
 	};
 
-	const editor = useEditor({
-		extensions: [
-			StarterKit.configure({
-				heading: {
-					levels: [1, 2, 3],
-				},
-			}),
-		],
-		content: "<p>Start writing...</p>",
-		onUpdate: () => {setSaveStatus("idle")},
-	});
+	const editor = useRichEditor({
+		onUpdate: () => {setSaveStatus("idle");},
+	})
 
 	useAutosave(editor);
 
@@ -85,11 +77,11 @@ export default function Editor() {
 
 							{/* RIGHT */}
 							<div className="flex items-center gap-3">
-      <span className="text-xs text-muted-foreground">
-        {saveStatus === "saving" && "Saving..."}
-				{saveStatus === "saved" && "Saved"}
-				{saveStatus === "idle" && "Editing"}
-      </span>
+								<span className="text-xs text-muted-foreground">
+									{saveStatus === "saving" && "Saving..."}
+									{saveStatus === "saved" && "Saved"}
+									{saveStatus === "idle" && "Editing"}
+								</span>
 
 								<button
 										onClick={handleSave}
@@ -106,13 +98,21 @@ export default function Editor() {
 					<button
 							onClick={handleSave}
 							disabled={saveStatus === "saving"}
-							className="rounded bg-black px-3 py-1 text-white disabled:opacity-50"
+							className="rounded bg-black px-3 py-1 text-white disabled:opacity-50 my-6"
 					>
 						{saveStatus === "saving" && "Saving..."}
 						{saveStatus === "saved" && "Saved ✓"}
 						{saveStatus === "error" && "Error"}
 						{saveStatus === "idle" && "Save"}
 					</button>
+
+					<div
+							onDragEnter={()=>setDragging(true)}
+							onDragLeave={()=>setDragging(false)}
+							onDrop={()=>setDragging(false)}
+					>
+						<DragOverlay active={dragging}/>
+					</div>
 
 					<EditorToolbar editor={editor} />
 

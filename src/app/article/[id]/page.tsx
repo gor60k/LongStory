@@ -3,19 +3,20 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import { getArticle } from "@/lib/articles";
+import { getArticle } from "@/shared/lib/storage/articles";
+import { useRichEditor } from '@/hooks/useRichEditor';
 
 export default function ArticlePage() {
 	const { id } = useParams<{ id: string }>();
 
 	const [loaded, setLoaded] = useState(false);
 
-	const editor = useEditor({
-		extensions: [StarterKit],
+	const article = getArticle(id);
+
+	const editor = useRichEditor({
 		editable: false,
-		content: "<p>Loading...</p>",
-	});
+		content: "<p>Loading...</p>"
+	})
 
 	useEffect(() => {
 		if (!editor || !id) return;
@@ -39,7 +40,10 @@ export default function ArticlePage() {
 
 	return (
 			<main className="min-h-screen">
-				<article className="mx-auto max-w-3xl px-6 py-16 prose prose-lg max-w-none">
+				<article className="mx-auto px-6 py-6 prose prose-lg max-w-1/2">
+					<div className="text-sm text-muted-foreground">
+						{new Date(article?.createdAt || "").toLocaleString()}
+					</div>
 					<EditorContent editor={editor} />
 				</article>
 			</main>

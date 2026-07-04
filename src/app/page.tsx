@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { getArticles, deleteArticle } from "@/lib/articles";
+import { getArticles, deleteArticle } from "@/shared/lib/storage/articles";
 import { useEffect, useState } from "react";
+import { ArticleCard } from '@/entities/article/ui/ArticleCard';
 
 export default function Home() {
 	const [articles, setArticles] = useState([]);
@@ -34,47 +35,14 @@ export default function Home() {
 							</p>
 					)}
 
-					{articles.map((a: any) => (
-						<div
-							key={a.id}
-							className="flex items-center justify-between rounded border p-4 hover:bg-muted"
-						>
-							<div className="min-w-0">
-								<div className="font-semibold truncate">
-									{a.title || "Untitled"}
-								</div>
-								<div className="text-sm text-muted-foreground">
-									{new Date(a.createdAt).toLocaleString()}
-								</div>
-							</div>
-							<div className="flex items-center gap-3 shrink-0">
-								<Link
-										href={`/article/${a.id}`}
-										className="text-sm text-muted-foreground hover:text-foreground"
-								>
-									View
-								</Link>
-
-								<Link
-										href={`/editor/${a.id}`}
-										className="text-sm text-blue-500 hover:underline"
-								>
-									Edit
-								</Link>
-
-								<button
-										onClick={() => {
-												if (confirm("Удалить эту статью?")) {
-													handleDelete(a.id);
-												}
-											}
-										}
-										className="text-sm text-red-500 hover:underline"
-								>
-									Delete
-								</button>
-							</div>
-						</div>
+					{articles.map((article: any) => (
+						<ArticleCard
+								key={article.id}
+								id={article.id}
+								title={article.title}
+								createdAt={article.createdAt}
+								onDelete={handleDelete}
+							/>
 					))}
 				</div>
 			</main>
