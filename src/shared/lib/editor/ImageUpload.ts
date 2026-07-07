@@ -14,7 +14,6 @@ export const ImageUpload = Extension.create({
 			new Plugin({
 				props: {
 					handleDrop(view, event) {
-						console.log("DROP");
 						return handle(view, event, editor);
 					},
 

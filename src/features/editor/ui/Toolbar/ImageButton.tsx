@@ -42,8 +42,6 @@ export default function ImageButton({ editor }: ImageButtonProps) {
 		}
 	};
 
-	console.log(editor);
-
 	return (
 			<>
 				<button

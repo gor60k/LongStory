@@ -1,19 +1,24 @@
-import { useEditor } from '@tiptap/react';
-import { editorExtensions } from '@/shared/lib/editor/extenstions';
+import { useEditor } from "@tiptap/react";
+import { useEffect, useRef } from "react";
+
+import { editorExtensions } from "@/shared/lib/editor/extenstions";
 
 type UseRichEditorProps = {
 	content?: string | object;
 	editable?: boolean;
-	onUpdate?: Parameters<typeof useEditor>[0]['onUpdate'];
+	onUpdate?: Parameters<typeof useEditor>[0]["onUpdate"];
 };
 
-export function useRichEditor({content = "<p>Просто начни писать</p>", editable = true, onUpdate}: UseRichEditorProps) {
-	const editor = useEditor({
+export function useRichEditor({
+																content,
+																editable = true,
+																onUpdate,
+															}: UseRichEditorProps) {
+
+	return useEditor({
 		extensions: editorExtensions,
 		content,
 		editable,
 		onUpdate,
 	});
-
-	return editor;
 }

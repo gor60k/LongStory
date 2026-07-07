@@ -1,21 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { getArticles, deleteArticle } from "@/shared/lib/storage/articles";
+import { getArticles, deleteArticle, Article } from '@/shared/lib/storage/articles';
 import { useEffect, useState } from "react";
 import { ArticleCard } from '@/entities/article/ui/ArticleCard';
 
 export default function Home() {
-	const [articles, setArticles] = useState([]);
+	const [articles, setArticles] = useState(() => getArticles());
 
 	const handleDelete = (id: string) => {
 		const updated = deleteArticle(id);
 		setArticles(updated);
 	};
-
-	useEffect(() => {
-		setArticles(getArticles());
-	}, []);
 
 	return (
 			<main className="mx-auto max-w-3xl px-6 py-16">
